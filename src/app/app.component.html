@@ -1,0 +1,154 @@
+<div class="overlay" [ngStyle]="{ display: display }"></div>
+<div class="modal" [ngStyle]="{ display: display }" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          {{ isEditModeEnabled ? "Edit" : "Add" }} customer
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="closeModal(myForm)"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #myForm="ngForm">
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="person.name"
+              placeholder="Enter a name"
+              name="name"
+              #name
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="person.age"
+              placeholder="Enter your age"
+              name="age"
+              #age
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="person.email"
+              placeholder="Enter your email"
+              name="email"
+              #email
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              name="id"
+              [(ngModel)]="person.id"
+              #id
+              hidden
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="closeModal(myForm)"
+        >
+          Close
+        </button>
+        <input
+          type="button"
+          class="btn btn-primary"
+          value="Add Customer"
+          *ngIf="!isEditModeEnabled"
+          (click)="addCustomer(myForm)"
+        />
+        <input
+          type="button"
+          class="btn btn-success"
+          value="Update"
+          *ngIf="isEditModeEnabled"
+          (click)="updateCustomer(myForm)"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <form
+    style="
+      background: #428bca;
+      padding-top: 20px;
+      margin-top: 20px;
+      padding-bottom: 2px;
+    "
+  >
+    <div class="form-group">
+      <div
+        class="input-group"
+        style="padding-left: 10px; width: 100% !important"
+      >
+        <input
+          id="filter"
+          name="text"
+          [(ngModel)]="usuarioInput"
+          placeholder="Search"
+          type="text"
+        />
+        <i id="filterIcon" class="fa fa-search"></i>
+      </div>
+    </div>
+  </form>
+  <table
+    class="table table-striped"
+    *ngIf="(customers | clientFilter : usuarioInput).length > 0"
+  >
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Email</th>
+        <th>Remove</th>
+        <th>Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let customer of customers | clientFilter : usuarioInput">
+        <td>{{ customer.name }}</td>
+        <td>{{ customer.age }}</td>
+        <td>{{ customer.email }}</td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteClient(customer.id)">
+            <i class="fa fa-trash mx-2"></i> Remove
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-primary" (click)="editClient(customer)">
+            <i class="fa fa-pencil-square mx-2"></i>Edit
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!(customers | clientFilter : usuarioInput).length">
+    No se encontro
+  </div>
+  <button (click)="openModalDialog()" class="btn btn-primary">
+    Add customer
+  </button>
+</div>
+
+<router-outlet></router-outlet>
